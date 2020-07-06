@@ -43,27 +43,27 @@ We got 4 sources to demix, we run 4 CNN in parallel, each gemm() is sequential.
 
 ## Demo and screenshot
 <p align="center">
-  <b>Mixture</b><br>
+  <b>Mixture [0 - 15000 Hz]</b><br>
 </p>
 
 ![Mixture](./mixture.jpg)
 <p align="center">
-  <b>Vocal</b><br>
+  <b>Vocal [0 - 15000 Hz]</b><br>
 </p>
 
 ![Vocal](./vocal.jpg)
 <p align="center">
-  <b>Accompaniment</b><br>
+  <b>Accompaniment [0 - 15000 Hz]</b><br>
 </p>
 
 ![Accompaniment](./accompaniment.jpg)
 <p align="center">
-  <b>Drum</b><br>
+  <b>Drum [0 - 15000 Hz]</b><br>
 </p>
 
 ![Drum](./drum.jpg)
 <p align="center">
-  <b>Bass (guitar)</b><br>
+  <b>Bass (guitar) [0 - 1200 Hz]</b><br>
 </p>
 
 ![Bass](./bass.jpg)
