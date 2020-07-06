@@ -30,7 +30,7 @@ typedef struct
 	pthread_mutex_t boss_mtx;
 	void *parentStruct;
 	int pos;
-} pt_infowcDiff;
+} pt_infoSpleeter4s;
 typedef struct
 {
 	// Constant
@@ -61,7 +61,7 @@ typedef struct
 	int outputFramePtr;
 	// IFFT Threads
 	pthread_t threads[TASK_NB];
-	pt_infowcDiff shared_info[TASK_NB];
+	pt_infoSpleeter4s shared_info[TASK_NB];
 } Spleeter4Stems;
 void Spleeter4StemsInit(Spleeter4Stems *msr, int initSpectralBinLimit, int initTimeStep, char *dir);
 void Spleeter4StemsFree(Spleeter4Stems *msr);

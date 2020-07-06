@@ -39,7 +39,7 @@ void LLsinHalfTblFloat(float dst[FFTSIZE])
 }
 void *task_type1(void *arg)
 {
-	pt_infowcDiff *info = (pt_infowcDiff *)arg;
+	pt_infoSpleeter4s *info = (pt_infoSpleeter4s *)arg;
 	Spleeter4Stems *msr = (Spleeter4Stems*)info->parentStruct;
 	int i, symIdx, bitRevFwd, bitRevSym;
 	float mask3L, mask3R, mask4L, mask4R;
@@ -113,7 +113,7 @@ void *task_type1(void *arg)
 }
 void *task_type2(void *arg)
 {
-	pt_infowcDiff *info = (pt_infowcDiff *)arg;
+	pt_infoSpleeter4s *info = (pt_infoSpleeter4s *)arg;
 	Spleeter4Stems *msr = (Spleeter4Stems*)info->parentStruct;
 	// cond_wait mutex must be locked before we can wait
 	pthread_mutex_lock(&(info->work_mtx));
@@ -147,7 +147,7 @@ void *task_type2(void *arg)
 }
 inline void task_start(Spleeter4Stems *PMA, int task)
 {
-	pt_infowcDiff *info = &(PMA->shared_info[task]);
+	pt_infoSpleeter4s *info = &(PMA->shared_info[task]);
 	// ensure worker is waiting
 	pthread_mutex_lock(&(info->work_mtx));
 	// set job information & state
@@ -158,7 +158,7 @@ inline void task_start(Spleeter4Stems *PMA, int task)
 }
 inline void task_wait(Spleeter4Stems *PMA, int task)
 {
-	pt_infowcDiff *info = &(PMA->shared_info[task]);
+	pt_infoSpleeter4s *info = &(PMA->shared_info[task]);
 	while (1)
 	{
 		pthread_cond_wait(&(info->boss_cond), &(info->boss_mtx));
@@ -166,10 +166,10 @@ inline void task_wait(Spleeter4Stems *PMA, int task)
 			break;
 	}
 }
-void thread_initwcDiff(Spleeter4Stems *PMA)
+void thread_initSpleeter4s(Spleeter4Stems *PMA)
 {
 	int i;
-	pt_infowcDiff *info = NULL;
+	pt_infoSpleeter4s *info = NULL;
 	for (i = 0; i < TASK_NB; i++)
 	{
 		//		GFT->sa_log_d(TAG, "Thread %d initialized", i + 1);
@@ -193,9 +193,9 @@ void thread_initwcDiff(Spleeter4Stems *PMA)
 		}
 	}
 }
-void thread_exitwcDiff(Spleeter4Stems *PMA)
+void thread_exitSpleeter4s(Spleeter4Stems *PMA)
 {
-	pt_infowcDiff *info = NULL;
+	pt_infoSpleeter4s *info = NULL;
 	for (int i = 0; i < TASK_NB; i++)
 	{
 		//		GFT->sa_log_d(TAG, "Thread %d get off from work", i + 1);
@@ -506,7 +506,7 @@ void Spleeter4StemsInit(Spleeter4Stems *msr, int initSpectralBinLimit, int initT
 	free(concat);
 	msr->nnMaskCursor = 0;
 	msr->outputFramePtr = 0;
-	thread_initwcDiff(msr);
+	thread_initSpleeter4s(msr);
 }
 void Spleeter4StemsFree(Spleeter4Stems *msr)
 {
@@ -524,7 +524,7 @@ void Spleeter4StemsFree(Spleeter4Stems *msr)
 				task_wait(msr, i);
 		}
 	}
-	thread_exitwcDiff(msr);
+	thread_exitSpleeter4s(msr);
 	free(msr->maskPtr[0][0]);
 	free(msr->maskPtr[0][1]);
 	free(msr->maskPtr[0][2]);
