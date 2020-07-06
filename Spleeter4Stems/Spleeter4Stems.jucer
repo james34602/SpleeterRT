@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="SVa31z" name="Spleeter4Stems" projectType="audioplug" jucerVersion="5.4.7"
+              pluginFormats="buildVST" pluginChannelConfigs="{2,8}">
+  <MAINGROUP id="A0m5SL" name="Spleeter4Stems">
+    <GROUP id="{6234ABAE-F3D1-C653-3E5A-5CCDC333EFD8}" name="Source">
+      <FILE id="zwNGlJ" name="codelet.c" compile="1" resource="0" file="Source/codelet.c"/>
+      <FILE id="yHQnQB" name="codelet.h" compile="0" resource="0" file="Source/codelet.h"/>
+      <FILE id="qLozNo" name="conv_util.h" compile="0" resource="0" file="Source/conv_util.h"/>
+      <FILE id="coMOgD" name="cpthread.c" compile="1" resource="0" file="Source/cpthread.c"/>
+      <FILE id="FBZISS" name="cpthread.h" compile="0" resource="0" file="Source/cpthread.h"/>
+      <FILE id="KFYnrH" name="gemm.c" compile="1" resource="0" file="Source/gemm.c"/>
+      <FILE id="ZS2qpi" name="im2col_dilated.c" compile="1" resource="0"
+            file="Source/im2col_dilated.c"/>
+      <FILE id="Jgj5B2" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="aUCl4S" name="spleeter.c" compile="1" resource="0" file="Source/spleeter.c"/>
+      <FILE id="l8rXCU" name="spleeter.h" compile="0" resource="0" file="Source/spleeter.h"/>
+      <FILE id="xIxa0g" name="Spleeter4Stems.c" compile="1" resource="0"
+            file="Source/Spleeter4Stems.c"/>
+      <FILE id="HR64gv" name="Spleeter4Stems.h" compile="0" resource="0"
+            file="Source/Spleeter4Stems.h"/>
+      <FILE id="AwtmRo" name="stb_image_write.h" compile="0" resource="0"
+            file="Source/stb_image_write.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2017 targetFolder="Builds/VisualStudio2017">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" winArchitecture="Win32"/>
+        <CONFIGURATION isDebug="0" name="Release" winArchitecture="Win32" useRuntimeLibDLL="0"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="D:/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2017>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+  <JUCEOPTIONS JUCE_VST3_CAN_REPLACE_VST2="0" JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+</JUCERPROJECT>

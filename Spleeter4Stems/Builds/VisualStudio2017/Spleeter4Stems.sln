@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2017
+
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Spleeter4Stems - VST", "Spleeter4Stems_VST.vcxproj", "{A9B058F4-0598-8769-23C4-BD2CB1BA3497}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2F0E73B5-975D-2265-05D0-A1A319C90B16} = {2F0E73B5-975D-2265-05D0-A1A319C90B16}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Spleeter4Stems - Shared Code", "Spleeter4Stems_SharedCode.vcxproj", "{2F0E73B5-975D-2265-05D0-A1A319C90B16}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9B058F4-0598-8769-23C4-BD2CB1BA3497}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A9B058F4-0598-8769-23C4-BD2CB1BA3497}.Debug|Win32.Build.0 = Debug|Win32
+		{A9B058F4-0598-8769-23C4-BD2CB1BA3497}.Release|Win32.ActiveCfg = Release|Win32
+		{A9B058F4-0598-8769-23C4-BD2CB1BA3497}.Release|Win32.Build.0 = Release|Win32
+		{2F0E73B5-975D-2265-05D0-A1A319C90B16}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2F0E73B5-975D-2265-05D0-A1A319C90B16}.Debug|Win32.Build.0 = Debug|Win32
+		{2F0E73B5-975D-2265-05D0-A1A319C90B16}.Release|Win32.ActiveCfg = Release|Win32
+		{2F0E73B5-975D-2265-05D0-A1A319C90B16}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
