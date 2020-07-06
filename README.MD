@@ -13,7 +13,7 @@ Batch normalization and activation is followed by the output of each convolution
 The decoder uses transposed convolution with stride = 2 for upsampling, with their input concatenated with each encoder Conv2D pair, worth notice, batch normalization and activation isn't the output of each encoder layers we are going to concatenate. The decoder side concatenates just the convolution output of the layers of an encoder. 
 
 #### Real time system design
-Deep learning in inference time is all about GEMM, we have to implement im2col() function with stride, padding, dilation that can handle TensorFlow-styled CNN or even Pytorch-styled convolutional layer. We also need col2im() function with stride and padding for transposed convolutional layers.
+Deep learning inference is all about GEMM, we have to implement im2col() function with stride, padding, dilation that can handle TensorFlow-styled CNN or even Pytorch-styled convolutional layer. We also need col2im() function with stride and padding for transposed convolutional layers.
 
 After the construction of the model in C, the test run show promising performance, we process 14 seconds song within 600 ms wall clock, numeric accuracy is about 1e-4 MSE of TensorFlow model, indicate the architecture is correct.
 
@@ -56,13 +56,15 @@ Other than that, the source separator should able to run Linux and macOS too.
 
 I haven't investigated the GEMM function for ARM device, if anyone finds good implementation, perhaps make a pull request to gemm.c.
 
-Memory consumption is a big deal for mobile phone, 4 stems model uses 700Mb RAM, 2 stems model uses around 300Mb RAM, currently have no plan for supporting 4 stems for mobile phone.
+Memory consumption is a big deal for mobile phone, 4 stems model uses 700Mb RAM, 2 stems model uses around 300Mb RAM.
+I have no plan for supporting 4 stems for mobile phone.
 
 #### FAQ
 1. Why not just go for libtensorflow for everything, TensorFlow is static computation graph-based, should be suitable for audio inference?
 A: There is a couple of reason for that. First, Python program that related to the Time-frequency transform and CNN entry point must be rewritten before generate a useful Tensorflow freezed model(.pb), no matter how static the computation graph is, why?
 
-Simply because __Spleeter__ official Tensorflow model pack 4 stems/CNN into same checkpoint file, 4 stems are totally sequential/run in series, the reason Tensorflow model run so fast, is SIMD instruction, other than that Tensorflow doesn't parallel the code path you want.
+Simply because __Spleeter__ official Tensorflow model pack 4 stems/CNN into same checkpoint file, 4 stems are totally sequential/run in series, the reason Tensorflow model run so fast, they uses SIMD instructions.
+Other than that, Tensorflow doesn't parallel the code path you want.
 You need to write a Python program, you will going to split the checkpoint of 4 stems model into 4 freezed graph and then use libtensorflow API to call 4 graphs on each thread.
 
 2. The audio processor is so slow, slower than Python version on the same hardware.
