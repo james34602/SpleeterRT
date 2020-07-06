@@ -39,7 +39,7 @@ The 2D image buffering mechanism is **double-buffered**, that means we collect 1
 
 The program spawns 5 threads, we got 1 thread for FFT, T-F masking, IFFT, overlapping, while 4 other threads are actively doing deep learning task in the background.
 
-We got 4 sources to demix, we run 4 CNN in parallel, each gemm() is sequential.
+We got 4 sources to demix, we run 4 CNN in parallel, each convolutional layer gemm() is sequential.
 
 ## Demo and screenshot
 <p align="center">
@@ -74,7 +74,7 @@ We got 4 sources to demix, we run 4 CNN in parallel, each gemm() is sequential.
 ![Adobe Audition](./screenshot.jpg)
 
 ## System Requirements and Installation
-Currently, the UI is implemented in JUCE.
+Currently, the UI is implemented using JUCE with no parameters can be adjusted.
 
 Any compilable audio plugin host or the standalone program will run the program.
 
@@ -90,23 +90,23 @@ I have no plan for supporting 4 stems for mobile phone.
 ## FAQ
 1. Why not just go for libtensorflow for everything, TensorFlow is static computation graph-based, should be suitable for audio inference?
 
-A: There is a couple of reason for that. First, Python program that related to the Time-frequency transform and CNN entry point must be rewritten before generate a useful Tensorflow freezed model(.pb), no matter how static the computation graph is, why?
+A: There is a couple of reason for that. Python program that related to the Time-frequency transform and CNN entry point must be rewritten before generate a useful Tensorflow freezed model(.pb), no matter how static the computation graph is. But why?
 
-Simply because __Spleeter__ official Tensorflow model pack 4 stems/CNN into same checkpoint file, 4 stems are totally sequential/run in series, the reason Tensorflow model run so fast, they uses SIMD instructions.
+Simply because __Spleeter__ official Tensorflow model pack 4 stems/CNN into same checkpoint file, 4 stems are totally sequential/series, the reason Tensorflow model run so fast, they uses SIMD instructions.
 
 Other than that, Tensorflow doesn't parallel the code path you want.
 
-You need to write a Python program, you will going to split the checkpoint of 4 stems model into 4 freezed graph and then use libtensorflow API to call 4 graphs on each thread.
+You need to write a Python program, you will going to split the checkpoint of 4 stems model into 4 individual freezed graph(.pb) and then use libtensorflow API to call 4 individual sessions on each thread.
 
 2. The audio processor is so slow, slower than Python version on the same hardware.
 
-A: Not really, the plugin isn't like __official__ Spleeter, we can't do everything in offline, there's a big no to write a real-time signal processor in offline.
+A: Not really, the plugin isn't like __official__ Spleeter, we can't do everything in offline, there's a big no to write a real-time signal processor that run in offline mode.
 
-The audio processor buffering system will cost extra time to process compared to offline Python program.
+The audio processor buffering system will cost extra overhead to process compared to offline Python program.
 
 At the same time, the FFT implementation isn't the best of course, but definitely comparable to Tensorflow.
 
-Different audio plugin host or streaming system have different buffer size, the system with a small buffer will definitely make the system slower.
+Different audio plugin host or streaming system have different buffer size, the system with a small buffer will definitely make the processing slower.
 
 ## License
 Other than the project main components are GPL-licensed, I don't know much about Intel MKL.
