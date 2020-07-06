@@ -1,4 +1,4 @@
-# Real time monaural source separation base on fully convolutional neural network operates on Time-frequency domain
+# Real time monaural source separation base on fully convolutional neural network operates on time-frequency domain
 AI Source separator written in C running a U-Net model trained by Deezer, separate your audio input to Drum, Bass, Accompaniment and Vocal/Speech with Spleeter model.
 
 ## Network overview
@@ -12,7 +12,7 @@ Batch normalization and activation is followed by the output of each convolution
 
 The decoder uses transposed convolution with stride = 2 for upsampling, with their input concatenated with each encoder Conv2D pair.
 
-Worth notice, batch normalization and activation isn't the output of each encoder layers we are going to concatenate. The decoder side concatenates just the convolution output of the layers of an encoder. 
+Worth notice, batch normalization and activation isn't the output of each encoder layers we are going to concatenate. The decoder side concatenates just the convolution output of the layers of an encoder.
 
 ## Real time system design
 Deep learning inference is all about GEMM, we have to implement im2col() function with stride, padding, dilation that can handle TensorFlow-styled CNN or even Pytorch-styled convolutional layer.
@@ -25,7 +25,7 @@ I don't plan to use libtensorflow, I'll explain why.
 
 Deep learning functions in existing code: im2col(), col2im(), gemm(), conv_out_dim(), transpconv_out_dim()
 
-We have to initialize a buck of memory and spawn some threads before processing begins, we allow developers to adjust the number of frequency bins and time frames for the neural network to inference, the __official__ Spleeter set FFTLength = 4096, Flim = 1024 and T = 512 for default CNN input, then the neural network will predict mask up to 11kHz and take about 11 secs.
+We have to initialize a buck of memory and spawn some threads before processing begins, we allow developers to adjust the number of frequency bins and time frames for the neural network to inference, the __official__ Spleeter set FFTLength = 4096, Flim = 1024 and T = 512 for default CNN input, then the neural network will predict mask up to 11kHz and take about 10 secs.
 
 Which mean real-world latency of default setting using __official__ model will cost you 11 secs + overlap-add sample latency, no matter how fast your CPU gets, the sample latency is intrinsical.
 
@@ -76,7 +76,7 @@ We got 4 sources to demix, we run 4 CNN in parallel, each convolutional layer ge
 ## System Requirements and Installation
 Currently, the UI is implemented using JUCE with no parameters can be adjusted.
 
-Any compilable audio plugin host or the standalone program will run the program.
+Any audio plugin host that is compilable with JUCE will run the program.
 
 Win32 API are used to find user profile directory to fread the deep learning model.
 
@@ -100,7 +100,7 @@ You need to write a Python program, you will going to split the checkpoint of 4 
 
 2. The audio processor is so slow, slower than Python version on the same hardware.
 
-A: Not really, the plugin isn't like __official__ Spleeter, we can't do everything in offline, there's a big no to write a real-time signal processor that run in offline mode.
+A: Not really, the plugin isn't like __official__ Spleeter, we can't do everything in offline, there's a big no to write a real-time signal processor that run in offline mode, online separation give meaning to this repository.
 
 The audio processor buffering system will cost extra overhead to process compared to offline Python program.
 
@@ -112,6 +112,6 @@ Different audio plugin host or streaming system have different buffer size, the 
 Other than the project main components are GPL-licensed, I don't know much about Intel MKL.
 
 ## Credit
-Deezer, of source, this processor won't happen without their great model.
+Deezer, of cource, this repository won't happen without their great model.
 
 Intel MKL, without MKL, the convolution operation run 40x slower.
