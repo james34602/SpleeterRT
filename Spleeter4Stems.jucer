@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="SVa31z" name="Spleeter4Stems" projectType="audioplug" jucerVersion="5.4.7"
-              pluginFormats="buildVST" pluginChannelConfigs="{2,8}">
+              pluginChannelConfigs="{2,8}" displaySplashScreen="1" pluginFormats="buildVST">
   <MAINGROUP id="A0m5SL" name="Spleeter4Stems">
     <GROUP id="{6234ABAE-F3D1-C653-3E5A-5CCDC333EFD8}" name="Source">
       <FILE id="zwNGlJ" name="codelet.c" compile="1" resource="0" file="Source/codelet.c"/>
@@ -25,28 +25,31 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2017 targetFolder="Builds/VisualStudio2017">
+    <VS2019 targetFolder="Builds/VisualStudio2019" extraDefs="MSVC=TRUE"
+            extraCompilerFlags="-I&quot;%MKLROOT%&quot;\include" externalLibraries="userenv.lib&#10;mkl_core.lib&#10;mkl_intel_lp64.lib&#10;mkl_sequential.lib">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" winArchitecture="Win32"/>
-        <CONFIGURATION isDebug="0" name="Release" winArchitecture="Win32" useRuntimeLibDLL="0"/>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\include&quot;&#10;&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\lib\intel64&quot;"
+                       libraryPath="&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\include&quot;&#10;&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\lib\intel64&quot;"/>
+        <CONFIGURATION isDebug="0" name="Release" headerPath="&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\include&quot;&#10;&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\lib\intel64&quot;"
+                       libraryPath="&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\include&quot;&#10;&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\lib\intel64&quot;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_audio_basics" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_utils" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_core" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_events" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_graphics" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="D:/JUCE/modules"/>
-        <MODULEPATH id="juce_opengl" path="D:/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl"/>
+        <MODULEPATH id="juce_gui_extra"/>
+        <MODULEPATH id="juce_gui_basics"/>
+        <MODULEPATH id="juce_graphics"/>
+        <MODULEPATH id="juce_events"/>
+        <MODULEPATH id="juce_data_structures"/>
+        <MODULEPATH id="juce_cryptography"/>
+        <MODULEPATH id="juce_core"/>
+        <MODULEPATH id="juce_audio_utils"/>
+        <MODULEPATH id="juce_audio_processors"/>
+        <MODULEPATH id="juce_audio_plugin_client"/>
+        <MODULEPATH id="juce_audio_formats"/>
+        <MODULEPATH id="juce_audio_devices"/>
+        <MODULEPATH id="juce_audio_basics"/>
       </MODULEPATHS>
-    </VS2017>
+    </VS2019>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>

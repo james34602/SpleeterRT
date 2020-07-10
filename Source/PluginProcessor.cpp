@@ -55,7 +55,7 @@ public:
 	{
 		std::vector<std::unique_ptr<RangedAudioParameter>> parameters;
 		for (int i = 0; i < PARAM__MAX; i++)
-			parameters.push_back(std::make_unique<AudioParameterFloat>(paramName[i][0], paramName[i][0], paramValueRange[i][0], paramValueRange[i][1], paramValueRange[i][2], paramValueRange[i][4], paramName[i][1]));
+			parameters.push_back(std::make_unique<AudioParameterFloat>(paramName[i][0], paramName[i][0], NormalisableRange<float>(paramValueRange[i][0], paramValueRange[i][1]), paramValueRange[i][2]));
 		return { parameters.begin(), parameters.end() };
 	}
 	void parameterChanged(const String& parameter, float newValue) override

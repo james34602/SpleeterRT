@@ -1,6 +1,22 @@
 # Real time monaural source separation base on fully convolutional neural network operates on time-frequency domain
 AI Source separator written in C running a U-Net model trained by Deezer, separate your audio input to Drum, Bass, Accompaniment and Vocal/Speech with Spleeter model.
 
+
+## Build Instructions
+
+### Prerequisite
+
+- Visual Studio 2019
+- Intel MKL library - 2019 Update 5
+- JUCE 6.x (but any version should work)
+
+Run `git clone https://github.com/james34602/SpleeterRT.git`
+
+Open the `.projucer` file.
+
+Build.
+
+
 ## Network overview
 The network accepts 2 channels magnitude spectrogram as input, U-Net is constructed using 6 pairs of encoder/decoder, final dilated convolution layer expand second last feature map into 2 channels for stereo inference.
 
