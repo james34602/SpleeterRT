@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="SVa31z" name="Spleeter4Stems" projectType="audioplug" jucerVersion="5.4.7"
-              pluginChannelConfigs="{2,8}" displaySplashScreen="1" pluginFormats="buildVST">
-  <MAINGROUP id="A0m5SL" name="Spleeter4Stems">
-    <GROUP id="{6234ABAE-F3D1-C653-3E5A-5CCDC333EFD8}" name="Source">
-      <FILE id="zwNGlJ" name="codelet.c" compile="1" resource="0" file="Source/codelet.c"/>
-      <FILE id="yHQnQB" name="codelet.h" compile="0" resource="0" file="Source/codelet.h"/>
-      <FILE id="qLozNo" name="conv_util.h" compile="0" resource="0" file="Source/conv_util.h"/>
-      <FILE id="coMOgD" name="cpthread.c" compile="1" resource="0" file="Source/cpthread.c"/>
-      <FILE id="FBZISS" name="cpthread.h" compile="0" resource="0" file="Source/cpthread.h"/>
-      <FILE id="KFYnrH" name="gemm.c" compile="1" resource="0" file="Source/gemm.c"/>
-      <FILE id="ZS2qpi" name="im2col_dilated.c" compile="1" resource="0"
-            file="Source/im2col_dilated.c"/>
-      <FILE id="Jgj5B2" name="PluginProcessor.cpp" compile="1" resource="0"
+<JUCERPROJECT id="bxzlY4" name="Spleeter4Stems" projectType="audioplug" pluginChannelConfigs="{2,8}"
+              pluginFormats="buildVST3" displaySplashScreen="1" jucerFormatVersion="1">
+  <MAINGROUP id="Cu4AfW" name="Spleeter4Stems">
+    <GROUP id="{7EAFACF6-5A38-1F10-043E-34E3E75DB818}" name="Source">
+      <FILE id="BER4Qm" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="aUCl4S" name="spleeter.c" compile="1" resource="0" file="Source/spleeter.c"/>
-      <FILE id="l8rXCU" name="spleeter.h" compile="0" resource="0" file="Source/spleeter.h"/>
-      <FILE id="xIxa0g" name="Spleeter4Stems.c" compile="1" resource="0"
+      <FILE id="Lx48tf" name="cpthread.c" compile="1" resource="0" file="Source/cpthread.c"/>
+      <FILE id="MZTvZU" name="cpthread.h" compile="0" resource="0" file="Source/cpthread.h"/>
+      <FILE id="MXvc3p" name="gemm.c" compile="1" resource="0" file="Source/gemm.c"/>
+      <FILE id="gT40Ce" name="im2col_dilated.c" compile="1" resource="0"
+            file="Source/im2col_dilated.c"/>
+      <FILE id="nrM0dK" name="spleeter.c" compile="1" resource="0" file="Source/spleeter.c"/>
+      <FILE id="vUb7EI" name="spleeter.h" compile="0" resource="0" file="Source/spleeter.h"/>
+      <FILE id="fxy57S" name="Spleeter4Stems.c" compile="1" resource="0"
             file="Source/Spleeter4Stems.c"/>
-      <FILE id="HR64gv" name="Spleeter4Stems.h" compile="0" resource="0"
+      <FILE id="fOOTWK" name="Spleeter4Stems.h" compile="0" resource="0"
             file="Source/Spleeter4Stems.h"/>
-      <FILE id="AwtmRo" name="stb_image_write.h" compile="0" resource="0"
+      <FILE id="Hd9E9g" name="stb_image_write.h" compile="0" resource="0"
             file="Source/stb_image_write.h"/>
+      <FILE id="r8j3Nf" name="codelet.c" compile="1" resource="0" file="Source/codelet.c"/>
+      <FILE id="OhBrx7" name="codelet.h" compile="0" resource="0" file="Source/codelet.h"/>
+      <FILE id="VPaafo" name="conv_util.h" compile="0" resource="0" file="Source/conv_util.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
@@ -34,20 +34,20 @@
                        libraryPath="&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\include&quot;&#10;&quot;C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2019.5.281\windows\mkl\lib\intel64&quot;"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_opengl"/>
-        <MODULEPATH id="juce_gui_extra"/>
-        <MODULEPATH id="juce_gui_basics"/>
-        <MODULEPATH id="juce_graphics"/>
-        <MODULEPATH id="juce_events"/>
-        <MODULEPATH id="juce_data_structures"/>
-        <MODULEPATH id="juce_cryptography"/>
-        <MODULEPATH id="juce_core"/>
-        <MODULEPATH id="juce_audio_utils"/>
-        <MODULEPATH id="juce_audio_processors"/>
-        <MODULEPATH id="juce_audio_plugin_client"/>
-        <MODULEPATH id="juce_audio_formats"/>
-        <MODULEPATH id="juce_audio_devices"/>
-        <MODULEPATH id="juce_audio_basics"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_core" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_events" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
+        <MODULEPATH id="juce_opengl" path="../../../splitter/vst_related/JUCE/5/5.4.7/modules"/>
       </MODULEPATHS>
     </VS2019>
   </EXPORTFORMATS>
