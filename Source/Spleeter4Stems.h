@@ -62,7 +62,8 @@ typedef struct
 	// IFFT Threads
 	pthread_t threads[TASK_NB];
 	pt_infoSpleeter4s shared_info[TASK_NB];
+	int needWait;
 } Spleeter4Stems;
-void Spleeter4StemsInit(Spleeter4Stems *msr, int initSpectralBinLimit, int initTimeStep, char *dir);
+void Spleeter4StemsInit(Spleeter4Stems *msr, int initSpectralBinLimit, int initTimeStep, void *coeffProvider[4]);
 void Spleeter4StemsFree(Spleeter4Stems *msr);
 void Spleeter4StemsProcessSamples(Spleeter4Stems *msr, const float *inLeft, const float *inRight, int inSampleCount, float **components);

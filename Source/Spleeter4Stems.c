@@ -351,10 +351,14 @@ void LLPAMSProcessNPR(Spleeter4Stems *msr)
 	if (msr->nnMaskCursor >= msr->timeStep)
 	{
 		// Join mask functions from threads
-		task_wait(msr, 1);
-		task_wait(msr, 2);
-		task_wait(msr, 3);
-		task_wait(msr, 4);
+		if (!msr->needWait)
+			msr->needWait = 1;
+		{
+			task_wait(msr, 1);
+			task_wait(msr, 2);
+			task_wait(msr, 3);
+			task_wait(msr, 4);
+		}
 		// Switch buffer
 		msr->outputFramePtr = !msr->outputFramePtr;
 		// Prevent race condition
@@ -395,7 +399,7 @@ void getAsymmetricWindow(float *analysisWnd, float *synthesisWnd, int k, int m, 
 	for (i = 0; i < FFTSIZE - SAMPLESHIFT; i++)
 		synthesisWnd[i] = synthesisWnd[i + SAMPLESHIFT];
 }
-void Spleeter4StemsInit(Spleeter4Stems *msr, int initSpectralBinLimit, int initTimeStep, char *dir)
+void Spleeter4StemsInit(Spleeter4Stems *msr, int initSpectralBinLimit, int initTimeStep, void *coeffProvider[4])
 {
 	memset(msr, 0, sizeof(Spleeter4Stems));
 	int i;
@@ -437,15 +441,10 @@ void Spleeter4StemsInit(Spleeter4Stems *msr, int initSpectralBinLimit, int initT
 	msr->nn[1] = (spleeter)allocateSpleeterStr();
 	msr->nn[2] = (spleeter)allocateSpleeterStr();
 	msr->nn[3] = (spleeter)allocateSpleeterStr();
-	initSpleeter(msr->nn[0], msr->analyseBinLimit, msr->timeStep, 1);
-	initSpleeter(msr->nn[1], msr->analyseBinLimit, msr->timeStep, 1);
-	initSpleeter(msr->nn[2], msr->analyseBinLimit, msr->timeStep, 1);
-	initSpleeter(msr->nn[3], msr->analyseBinLimit, msr->timeStep, 1);
-	void *ceoffProvPtr[4];
-	getCoeffPtr(msr->nn[0], &ceoffProvPtr[0]);
-	getCoeffPtr(msr->nn[1], &ceoffProvPtr[1]);
-	getCoeffPtr(msr->nn[2], &ceoffProvPtr[2]);
-	getCoeffPtr(msr->nn[3], &ceoffProvPtr[3]);
+	initSpleeter(msr->nn[0], msr->analyseBinLimit, msr->timeStep, 1, coeffProvider[0]);
+	initSpleeter(msr->nn[1], msr->analyseBinLimit, msr->timeStep, 1, coeffProvider[1]);
+	initSpleeter(msr->nn[2], msr->analyseBinLimit, msr->timeStep, 1, coeffProvider[2]);
+	initSpleeter(msr->nn[3], msr->analyseBinLimit, msr->timeStep, 1, coeffProvider[3]);
 	msr->maskPtr[0][0] = (float*)malloc(msr->analyseBinLimit * msr->timeStep * 2 * sizeof(float));
 	msr->maskPtr[0][1] = (float*)malloc(msr->analyseBinLimit * msr->timeStep * 2 * sizeof(float));
 	msr->maskPtr[0][2] = (float*)malloc(msr->analyseBinLimit * msr->timeStep * 2 * sizeof(float));
@@ -466,51 +465,13 @@ void Spleeter4StemsInit(Spleeter4Stems *msr, int initSpectralBinLimit, int initT
 		msr->maskPtr[1][2][i] = v;
 		msr->maskPtr[1][3][i] = v;
 	}
-	// Load coeff
-	char file1[17] = "\\drum4stems.dat";
-	char file2[17] = "\\bass4stems.dat";
-	char file3[26] = "\\accompaniment4stems.dat";
-	char file4[17] = "\\vocal4stems.dat";
-	size_t len1 = strlen(dir);
-	size_t len2 = strlen(file1);
-	char *concat = (char*)malloc(len1 + len2 + 1);
-	memcpy(concat, dir, len1);
-	memcpy(concat + len1, file1, len2 + 1);
-	FILE *fp = fopen(concat, "rb");
-	fread(ceoffProvPtr[0], 1, 39290900, fp);
-	fclose(fp);
-	free(concat);
-	len2 = strlen(file2);
-	concat = (char*)malloc(len1 + len2 + 1);
-	memcpy(concat, dir, len1);
-	memcpy(concat + len1, file2, len2 + 1);
-	fp = fopen(concat, "rb");
-	fread(ceoffProvPtr[1], 1, 39290900, fp);
-	fclose(fp);
-	free(concat);
-	len2 = strlen(file3);
-	concat = (char*)malloc(len1 + len2 + 1);
-	memcpy(concat, dir, len1);
-	memcpy(concat + len1, file3, len2 + 1);
-	fp = fopen(concat, "rb");
-	fread(ceoffProvPtr[2], 1, 39290900, fp);
-	fclose(fp);
-	free(concat);
-	len2 = strlen(file4);
-	concat = (char*)malloc(len1 + len2 + 1);
-	memcpy(concat, dir, len1);
-	memcpy(concat + len1, file4, len2 + 1);
-	fp = fopen(concat, "rb");
-	fread(ceoffProvPtr[3], 1, 39290900, fp);
-	fclose(fp);
-	free(concat);
 	msr->nnMaskCursor = 0;
 	msr->outputFramePtr = 0;
 	thread_initSpleeter4s(msr);
 }
 void Spleeter4StemsFree(Spleeter4Stems *msr)
 {
-	if (!msr->mInputPos && !msr->nnMaskCursor && !msr->mOutputReadSampleOffset && !msr->mOutputBufferCount)
+	if (!msr->needWait)
 	{
 		// Indicate we haven't run wake up the neural network thread for the first time
 		for (int i = 1; i < TASK_NB; i++)

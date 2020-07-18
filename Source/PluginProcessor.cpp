@@ -7,14 +7,14 @@ extern "C"
 {
 #include "Spleeter4Stems.h"
 }
-enum { PARAM_DUMMY, PARAM__MAX };
+enum { PARAM_ORDER, PARAM__MAX };
 const char paramName[PARAM__MAX][2][12] =
 {
-{"dummy", "val" },
+{"Channel", "order" },
 };
 const float paramValueRange[PARAM__MAX][5] =
 {
-	{ 0.0f, 1.0f, 0.5f, 1.0f, 1.0f }
+	{ 0.0f, 3.0f, 0.0f, 1.0f, 1.0f }
 };
 #include <userenv.h>  // GetUserProfileDirectory() (link with userenv)
 const int BUFLEN = 512;
@@ -28,7 +28,6 @@ BOOL getCurrentUserDir(char* buf, DWORD buflen)
 	CloseHandle(hToken);
 	return TRUE;
 }
-//#define DLINESUBWOOFER
 class MS5_1AI : public AudioProcessor, public AudioProcessorValueTreeState::Listener
 {
 public:
@@ -42,32 +41,87 @@ public:
 		for (i = 0; i < PARAM__MAX; i++)
 			treeState.addParameterListener(paramName[i][0], this);
 		fs = 44100;
+		order = 0;
 		char dir[512];
 		getCurrentUserDir(dir, 512);
-		Spleeter4StemsInit(&msr, 2048, 128, dir);
-		setLatencySamples(LATENCY);
+		for (i = 0; i < 4; i++)
+			coeffProvPtr[i] = malloc(getCoeffSize());
+		// Load coeff
+		char file1[17] = "\\drum4stems.dat";
+		char file2[17] = "\\bass4stems.dat";
+		char file3[26] = "\\accompaniment4stems.dat";
+		char file4[17] = "\\vocal4stems.dat";
+		size_t len1 = strlen(dir);
+		size_t len2 = strlen(file1);
+		char *concat = (char*)malloc(len1 + len2 + 1);
+		memcpy(concat, dir, len1);
+		memcpy(concat + len1, file1, len2 + 1);
+		FILE *fp = fopen(concat, "rb");
+		fread(coeffProvPtr[0], 1, 39290900, fp);
+		fclose(fp);
+		free(concat);
+		len2 = strlen(file2);
+		concat = (char*)malloc(len1 + len2 + 1);
+		memcpy(concat, dir, len1);
+		memcpy(concat + len1, file2, len2 + 1);
+		fp = fopen(concat, "rb");
+		fread(coeffProvPtr[1], 1, 39290900, fp);
+		fclose(fp);
+		free(concat);
+		len2 = strlen(file3);
+		concat = (char*)malloc(len1 + len2 + 1);
+		memcpy(concat, dir, len1);
+		memcpy(concat + len1, file3, len2 + 1);
+		fp = fopen(concat, "rb");
+		fread(coeffProvPtr[2], 1, 39290900, fp);
+		fclose(fp);
+		free(concat);
+		len2 = strlen(file4);
+		concat = (char*)malloc(len1 + len2 + 1);
+		memcpy(concat, dir, len1);
+		memcpy(concat + len1, file4, len2 + 1);
+		fp = fopen(concat, "rb");
+		fread(coeffProvPtr[3], 1, 39290900, fp);
+		fclose(fp);
+		free(concat);
+		setLatencySamples(16384);
+		msr = 0;
 	}
 	MS5_1AI::~MS5_1AI()
 	{
-		Spleeter4StemsFree(&msr);
+		Spleeter4StemsFree(msr);
+		if (coeffProvPtr[0])
+		{
+			for (int i = 0; i < 4; i++)
+				free(coeffProvPtr[i]);
+			coeffProvPtr[0] = 0;
+		}
 	}
 	AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
 	{
 		std::vector<std::unique_ptr<RangedAudioParameter>> parameters;
 		for (int i = 0; i < PARAM__MAX; i++)
-			parameters.push_back(std::make_unique<AudioParameterFloat>(paramName[i][0], paramName[i][0], NormalisableRange<float>(paramValueRange[i][0], paramValueRange[i][1]), paramValueRange[i][2]));
+			parameters.push_back(std::make_unique<AudioParameterFloat>(paramName[i][0], paramName[i][0], NormalisableRange<float>(paramValueRange[i][0], paramValueRange[i][1], paramValueRange[i][4]), paramValueRange[i][2]));
 		return { parameters.begin(), parameters.end() };
 	}
 	void parameterChanged(const String& parameter, float newValue) override
 	{
 		if (parameter == paramName[0][0])
 		{
+			order = (int)newValue;
 		}
 	}
 	//==============================================================================
 	void prepareToPlay(double sampleRate, int maximumExpectedSamplesPerBlock) override
 	{
 		fs = (int)sampleRate;
+		if (msr)
+		{
+			Spleeter4StemsFree(msr);
+			free(msr);
+		}
+		msr = (Spleeter4Stems*)malloc(sizeof(Spleeter4Stems));
+		Spleeter4StemsInit(msr, 1536, 256, coeffProvPtr);
 	}
 	void releaseResources() override
 	{
@@ -83,9 +137,37 @@ public:
 		const int n = buffer.getNumSamples();
 		// input channels
 		const float *inputs[2] = { buffer.getReadPointer(0), buffer.getReadPointer(1) };
-		float* const outputs[8] = { buffer.getWritePointer(0), buffer.getWritePointer(1),
+		float *tmpPtr1, *tmpPtr2;
+		float* outputs[8] = { buffer.getWritePointer(0), buffer.getWritePointer(1),
 		buffer.getWritePointer(2), buffer.getWritePointer(3), buffer.getWritePointer(4),
 		buffer.getWritePointer(5), buffer.getWritePointer(6), buffer.getWritePointer(7) };
+		if (order == 1)
+		{
+			tmpPtr1 = outputs[0];
+			tmpPtr2 = outputs[1];
+			outputs[0] = outputs[2];
+			outputs[1] = outputs[3];
+			outputs[2] = tmpPtr1;
+			outputs[3] = tmpPtr2;
+		}
+		else if (order == 2)
+		{
+			tmpPtr1 = outputs[0];
+			tmpPtr2 = outputs[1];
+			outputs[0] = outputs[4];
+			outputs[1] = outputs[5];
+			outputs[4] = tmpPtr1;
+			outputs[5] = tmpPtr2;
+		}
+		else if (order == 3)
+		{
+			tmpPtr1 = outputs[0];
+			tmpPtr2 = outputs[1];
+			outputs[0] = outputs[6];
+			outputs[1] = outputs[7];
+			outputs[6] = tmpPtr1;
+			outputs[7] = tmpPtr2;
+		}
 		// output channels
 		int i, offset = 0;
 		while (offset < n)
@@ -94,7 +176,7 @@ public:
 			outputs[2] + offset, outputs[3] + offset, outputs[4] + offset,
 			outputs[5] + offset, outputs[6] + offset, outputs[7] + offset };
 			const int processing = min(n - offset, OVPSIZE);
-			Spleeter4StemsProcessSamples(&msr, inputs[0] + offset, inputs[1] + offset, processing, ptr);
+			Spleeter4StemsProcessSamples(msr, inputs[0] + offset, inputs[1] + offset, processing, ptr);
 			offset += processing;
 		}
 	}
@@ -133,8 +215,10 @@ public:
 private:
 	int isStandalone;
 	//==============================================================================
-	Spleeter4Stems msr;
+	void *coeffProvPtr[4];
+	Spleeter4Stems *msr;
 	int fs;
+	int order;
 	AudioProcessorValueTreeState treeState;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MS5_1AI)
 };
