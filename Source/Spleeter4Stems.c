@@ -145,7 +145,7 @@ void *task_type2(void *arg)
 	pthread_exit(NULL);
 	return 0;
 }
-inline void task_start(Spleeter4Stems *PMA, int task)
+void task_start(Spleeter4Stems *PMA, int task)
 {
 	pt_infoSpleeter4s *info = &(PMA->shared_info[task]);
 	// ensure worker is waiting
@@ -156,7 +156,7 @@ inline void task_start(Spleeter4Stems *PMA, int task)
 	pthread_cond_signal(&(info->work_cond));
 	pthread_mutex_unlock(&(info->work_mtx));
 }
-inline void task_wait(Spleeter4Stems *PMA, int task)
+void task_wait(Spleeter4Stems *PMA, int task)
 {
 	pt_infoSpleeter4s *info = &(PMA->shared_info[task]);
 	while (1)

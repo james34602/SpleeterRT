@@ -53,21 +53,27 @@ struct _spleeter
 	float(*activationEncoder)(float);
 	float(*activationDecoder)(float);
 };
-__forceinline float sigmoid(float x)
+float sigmoid(float x)
 {
-	return 1.0f / (1.0f + expf(-x));
+    if (x >= 0.0f)
+        return 1.0f / (1.0f + expf(-x));
+    else
+    {
+        float tmp = expf(x);
+        return tmp / (1.0f + tmp);
+    }
 }
 float leakyReLU(float x)
 {
-	return max(0.2f * x, x);
+    return x >= 0.0f ? x : 0.2f * x;
 }
 float ReLU(float x)
 {
-	return max(0.0f, x);
+    return x >= 0.0f ? x : 0.0f;
 }
 float ELU(float x)
 {
-	return x > 0.0f ? x : expf(x) - 1.0f;
+	return x >= 0.0f ? x : expf(x) - 1.0f;
 }
 #include "conv_util.h"
 void initTransposeConv2dLayer(DLtransposedConv *ly, int inputCh, int outputCh, int height, int width, int stride, float *kernel, int kernelSize)
@@ -120,7 +126,7 @@ int maxArray(int *x, int n)
 	}
 	return maxVal;
 }
-void initSpleeter(struct _spleeter *nn, int width, int height, int stemMode)
+void initSpleeter(struct _spleeter *nn, int width, int height, int stemMode, void *coeff)
 {
 	nn->whProd = width * height;
 	nn->whProd2 = width / 2 * height / 2;
@@ -131,7 +137,6 @@ void initSpleeter(struct _spleeter *nn, int width, int height, int stemMode)
 	nn->whProd7 = width / 64 * height / 64;
 	size_t largestSize = width * height * 32;
 	const int kernelSize = 5;
-	const int kernelwhProd = 5 * 5;
 	nn->conv1 = (float*)malloc(nn->whProd2 * 16 * sizeof(float));
 	nn->conv2 = (float*)malloc(nn->whProd3 * 32 * sizeof(float));
 	nn->conv3 = (float*)malloc(nn->whProd4 * 64 * sizeof(float));
@@ -139,7 +144,7 @@ void initSpleeter(struct _spleeter *nn, int width, int height, int stemMode)
 	nn->conv5 = (float*)malloc(nn->whProd6 * 256 * sizeof(float));
 	nn->conv6 = (float*)malloc(nn->whProd7 * 512 * sizeof(float));
 	nn->catLayer = (float*)malloc(largestSize * sizeof(float));
-	nn->coeffProvider = (spleeterCoeff*)malloc(sizeof(spleeterCoeff));
+	nn->coeffProvider = (spleeterCoeff*)coeff;
 	if (!stemMode)
 	{
 		nn->activationEncoder = leakyReLU;
@@ -312,9 +317,9 @@ void processSpleeter(struct _spleeter *nn, float *x, float *y)
 			y[s * nn->whProd + i] = sigmoid(nn->catLayer[s * nn->whProd + i] + nn->coeffProvider->up7_convBias[s]);
 	}
 }
-void getCoeffPtr(struct _spleeter *nn, void **coeff)
+size_t getCoeffSize()
 {
-	*coeff = (void*)nn->coeffProvider;
+	return sizeof(spleeterCoeff);
 }
 void getMaskPtr(struct _spleeter *nn, float **mask)
 {
@@ -330,5 +335,4 @@ void freeSpleeter(struct _spleeter *nn)
 	free(nn->conv6);
 	free(nn->catLayer);
 	free(nn->workspace);
-	free(nn->coeffProvider);
 }
