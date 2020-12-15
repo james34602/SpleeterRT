@@ -9,6 +9,7 @@ AI Source separator written in C running a U-Net model trained by Deezer, separa
 - Visual Studio 2019
 - Intel MKL library - 2019 Update 5
 - JUCE 6.x (but any version should work)
+- Extract model.7z inplace (for offline executable)
 
 Run `git clone https://github.com/james34602/SpleeterRT.git`
 
@@ -30,7 +31,7 @@ The decoder uses transposed convolution with stride = 2 for upsampling, with the
 
 Worth notice, batch normalization and activation isn't the output of each encoder layers we are going to concatenate. The decoder side concatenates just the convolution output of the layers of an encoder.
 
-## Real time system design
+## Fast neural network inference
 Deep learning inference is all about GEMM, we have to implement im2col() function with stride, padding, dilation that can handle TensorFlow-styled CNN or even Pytorch-styled convolutional layer.
 
 We also need col2im() function with stride and padding for transposed convolutional layers.
@@ -43,11 +44,12 @@ Deep learning functions in existing code: im2col(), col2im(), gemm(), conv_out_d
 
 We have to initialize a buck of memory and spawn some threads before processing begins, we allow developers to adjust the number of frequency bins and time frames for the neural network to inference, the __official__ Spleeter set FFTLength = 4096, Flim = 1024 and T = 512 for default CNN input, then the neural network will predict mask up to 11kHz and take about 10 secs.
 
+## Real time system design for the VST
 Which mean real-world latency of default setting using __official__ model will cost you 11 secs + overlap-add sample latency, no matter how fast your CPU gets, the sample latency is intrinsical.
 
-I decide to reduce the time-frequency frames collection to 1 / 4, that means we modify T to 128 at the cost of a slightly inaccurate result.
+I decide to reduce the time-frequency frames stack to a a quarter to the original, that means we modify T to 128 at the cost of a slightly inaccurate result.
 
-However, all this reduce sample latency but doesn't solve the fact that our system is lagging, because each deep learning function call cost 600 ms, it is like we stopping the audio pipeline for 600 ms for the CNN.
+However, all this reduce sample latency but doesn't solve the fact that our system is lagging, because each deep learning function call cost 600 ms on my system, it is like we stopping the audio pipeline for 600 ms for the CNN.
 
 Ok, then we have to go for the double-buffered design.
 
@@ -56,6 +58,21 @@ The 2D image buffering mechanism is **double-buffered**, that means we collect 1
 The program spawns 5 threads, we got 1 thread for FFT, T-F masking, IFFT, overlapping, while 4 other threads are actively doing deep learning task in the background.
 
 We got 4 sources to demix, we run 4 CNN in parallel, each convolutional layer gemm() is sequential.
+
+### Can we go even shorter intrinsical latency?
+Yes, but would start getting inefficient, the only way seem to be puting every present frame to the right hand side of spectrogram and sliding every context/history frames to the left hand side of spectrogram, because keeping more context/history frames will result in more reliable separation.
+
+This way we run a lot of redundant frames that contribute to almost nothing to the mask except context information they provide.
+
+## Blazingly fast offline inference
+How fast for the offline version?
+
+Well, if you've linked the program with Intel MKL, I'm sure this will go as fast as a Tensorflow-GPU inference, running SpleeterRT on recent desktop CPU model will offer you faster-than Tensorflow-GPU inference.
+
+### How is that possible?
+Multi-threading the inference of each frames will definitely offer you superior parallelism over official Spleeter Tensorflow, I also parallelize STFT computation for offline version, our performance out-perform official Spleeter Tensorflow on almost every level.
+
+Notice that, our offline inference is quantized and can separate only Drum, Accompaniment and Vocal, since I thought Bass guitar separation is not useful and waste a lot of computation.
 
 ## Demo and screenshot
 <p align="center">
