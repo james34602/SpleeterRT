@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="codelet.c" />
+    <ClCompile Include="cpthread.c" />
+    <ClCompile Include="gemm.c" />
+    <ClCompile Include="im2col_dilated.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="spleeter.c" />
+    <ClCompile Include="libsamplerate\samplerate.c">
+      <Filter>libsamplerate</Filter>
+    </ClCompile>
+    <ClCompile Include="libsamplerate\src_sinc.c">
+      <Filter>libsamplerate</Filter>
+    </ClCompile>
+    <ClCompile Include="stftFix.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\dr_wav.h" />
+    <ClInclude Include="codelet.h" />
+    <ClInclude Include="conv_util.h" />
+    <ClInclude Include="cpthread.h" />
+    <ClInclude Include="spleeter.h" />
+    <ClInclude Include="libsamplerate\common.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="libsamplerate\samplerate.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="libsamplerate\src_config.h">
+      <Filter>libsamplerate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\dr_flac.h" />
+    <ClInclude Include="stftFix.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="libsamplerate">
+      <UniqueIdentifier>{246115f1-b0b5-416e-a9b4-60018a2fb4af}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
