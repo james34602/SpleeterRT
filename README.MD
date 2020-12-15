@@ -72,7 +72,7 @@ Well, if you've linked the program with Intel MKL, I'm sure this will go as fast
 ### How is that possible?
 Multi-threading the inference of each frames will definitely offer you superior parallelism over official Spleeter Tensorflow, I also parallelize STFT computation for offline version, our performance out-perform official Spleeter Tensorflow on almost every level.
 
-Notice that, our offline weights is quantized(will be decompress on execution) and can separate only [Drum, Accompaniment and Vocal], since I thought Bass guitar separation is not useful and waste a lot of computation.
+Notice that, our offline weights is quantized(will be decompress on execution) and can separate only [Accompaniment and Vocal] OR [Drum, Accompaniment and Vocal], since I thought Bass guitar separation is not useful and waste a lot of computation.
 
 ## Demo and screenshot
 <p align="center">
