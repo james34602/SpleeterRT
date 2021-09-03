@@ -74,6 +74,11 @@ Multi-threading the inference of each frames will definitely offer you superior 
 
 Notice that, our offline weights is quantized(will be decompress on execution) and can separate only [Accompaniment and Vocal] OR [Drum, Accompaniment and Vocal], since I thought Bass guitar separation is not useful and waste a lot of computation.
 
+### What is the cost for this?
+The cost is pretty obvious, I didn't compute the ratio mask from final spectrogram, so the quality is degraded for this only reason(Compare to official version), without computing ratio mask save half computation amount for 2stem case.
+
+The result will be identical to official Spleeter if you add back the ratio mask computing process.
+
 ## Demo and screenshot
 <p align="center">
   <b>Mixture [0 - 15000 Hz]</b><br>
